@@ -1,2 +1,4 @@
 # rltsquare_favourite
-Customer can add products to their favorite list.Favorite list is shown on customer dashboard. customer can remove favorite items and can add to cart them later on
+Customer can add products to their favorites list.
+Favorite list is shown on customer dashboard
+Favourites can be added or removed from the list.
