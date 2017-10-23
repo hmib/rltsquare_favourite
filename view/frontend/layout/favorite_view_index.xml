@@ -1,0 +1,17 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd" layout="2columns-left">
+    	<update handle="customer_account" />
+	<body>
+	<head>
+        <title>Favorite List</title>
+    </head>
+	<referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Favorite List</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="RLTSquare\Favorite\Block\View\Favorite" name="favorite_list" as ="favorite_list" template="RLTSquare_Favorite::view/list.phtml" />
+        </referenceContainer>
+
+    </body>
+</page>

@@ -1,0 +1,111 @@
+<?php
+$customerSession = $block->getCustomerSession();
+
+$objectModelManager = \Magento\Framework\App\ObjectManager::getInstance ();
+$helper = $objectModelManager->get ( 'RLTSquare\Favorite\Helper\Data' );
+
+$currentProduct = $block->getCurrentProduct();
+$currentProductId = $currentProduct->getId();
+
+$dataId = "?id=" . $currentProductId;
+
+?>
+        <div class="likes">
+            <div class="likes-action">
+                <?php if ( $helper->productIsFavoriteByCustomer( $currentProductId, $customerSession->getCustomer()->getId() ) == true ) { ?>
+                    <a href="javascript:void(0)" class="like hidden" data-id="<?php echo $currentProductId; ?>" ><span class=""></span><span>Add To Favorite</span></a>
+                <?php } else { ?>
+                    <a href="javascript:void(0)" class="like" data-id="<?php echo $currentProductId; ?>" ><span class=""></span><span><?php echo __('Add To Favorite') ?></span></a>
+                <?php } ?>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            require(['jquery'],function($){
+                jQuery.noConflict();
+                jQuery(function(){
+                    jQuery('.like').on('click', function(){
+                        var $this = jQuery(this);
+                        var id = $this.data('id');
+
+                        jQuery.ajax({url: "<?php echo $helper->getLikeUrl() . $dataId; ?>",
+                            beforeSend: function(){
+                                jQuery('.likes-action-loadingImg').css("display", "block");
+                            },
+                            complete: function(){
+                                jQuery('.likes-action-loadingImg').css("display", "none");
+                            }, success: function(result){
+                                var like = $this.siblings('.likes-count');
+                                var count = like.text();
+                                like.fadeOut().text(result).fadeIn();
+                                $this.siblings('.hidden').removeClass('hidden');
+                                $this.addClass('hidden');
+                            }
+                        });
+                    });
+
+                    /* ------------------------------------------------------------------------------------ */
+
+                    jQuery('.unlike').on('click', function(){
+                        var $this = jQuery(this);
+                        var id = $this.data('id');
+
+                        jQuery.ajax({url: "<?php echo $helper->getUnlikeUrl() . $dataId; ?>",
+                            beforeSend: function(){
+                                jQuery('.likes-action-loadingImg').css("display", "block");
+                            },
+                            complete: function(){
+                                jQuery('.likes-action-loadingImg').css("display", "none");
+                            }, success: function(result){
+                                var like = $this.siblings('.likes-count');
+                                var count = like.text();
+                                like.fadeOut().text(result).fadeIn();
+                                $this.siblings('.hidden').removeClass('hidden');
+                                $this.addClass('hidden');
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+        <style type="text/css">
+            .likes .hidden{
+                display: none;
+            }
+            .likes .likes-action{
+                color: #999;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+            }
+            .likes .likes-action .like, .likes .likes-action .unlike{
+                background: transparent none repeat scroll 0 0;
+                border: 0 none;
+                box-sizing: inherit;
+                color: #333;
+                display: inline;
+                font-size: 12px;
+                font-weight: 500;
+                line-height: inherit;
+                margin: 0;
+                padding: 0;
+                text-transform: capitalize;
+            }
+            .likes .likes-action .like span.fa, .likes .likes-action .unlike span.fa{
+                display: inline-block;
+                font-size: 16px;
+                margin-right: 10px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            .likes .likes-action .like:hover, .likes .likes-action .unlike:hover{
+                color: #fc6a21;
+            }
+            .likes-action-loadingImg {
+                display: none;
+                left: 15%;
+                position: absolute;
+                top: 15%;
+            }
+        </style>
